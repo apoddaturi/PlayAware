@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PlayAware</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                width: 320px;
+                padding: 10px;
+            }
+            h1 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            label {
+                display: block;
+                margin-bottom: 8px;
+            }
+            input[type="text"] {
+                width: 100%;
+                padding: 6px;
+                box-sizing: border-box;
+            }
+            button {
+                background-color: #4285f4;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+            button:hover {
+                background-color: #3367d6;
+            }
+            .domain-list {
+                max-height: 200px;
+                overflow-y: auto;
+                margin-top: 10px;
+                border: 1px solid #ddd;
+                padding: 10px;
+            }
+            .domain-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 5px 0;
+                border-bottom: 1px solid #eee;
+            }
+            .domain-item:last-child {
+                border-bottom: none;
+            }
+            .remove-btn {
+                background-color: #ea4335;
+                color: white;
+                border: none;
+                padding: 3px 6px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            .settings-section {
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+            }
+            .slider-container {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+            input[type="range"] {
+                flex-grow: 1;
+                margin: 0 10px;
+            }
+            .increment-btn,
+            .decrement-btn {
+                background-color: #4285f4;
+                color: white;
+                border: none;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-weight: bold;
+                margin: 0;
+            }
+            .increment-btn:hover,
+            .decrement-btn:hover {
+                background-color: #3367d6;
+            }
+            .domain-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .manual-domain-input {
+                display: flex;
+                gap: 5px;
+            }
+            .manual-domain-input input {
+                flex-grow: 1;
+            }
+            .quick-actions {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .quick-actions button {
+                flex: 1;
+                margin: 0;
+            }
+            .enabled {
+                background-color: #4285f4;
+            }
+            .disabled {
+                background-color: #ea4335;
+            }
+            #normalSpeed {
+                background-color: #34a853;
+            }
+            #normalSpeed:hover {
+                background-color: #2e9549;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>PlayAware</h1>
+
+        <div class="quick-actions">
+            <button id="quickToggle" class="enabled">Disable Extension</button>
+            <button id="normalSpeed">Normal Speed (1x)</button>
+        </div>
+
+        <div class="settings-section">
+            <div class="form-group">
+                <label for="focusedSpeed"
+                    >Video Speed When Focused: <span id="focusedSpeedValue">1.5x</span></label
+                >
+                <div class="slider-container">
+                    <button class="decrement-btn" id="decrementFocused">-</button>
+                    <input type="range" id="focusedSpeed" min="0.25" max="3" step="0.25" value="1.5" />
+                    <button class="increment-btn" id="incrementFocused">+</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="unfocusedSpeed"
+                    >Video Speed When Unfocused: <span id="unfocusedSpeedValue">0.75x</span></label
+                >
+                <div class="slider-container">
+                    <button class="decrement-btn" id="decrementUnfocused">-</button>
+                    <input type="range" id="unfocusedSpeed" min="0.25" max="3" step="0.25" value="0.75" />
+                    <button class="increment-btn" id="incrementUnfocused">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="domain-actions">
+            <button id="addDomain">Add Current Domain</button>
+
+            <div class="manual-domain-input" style="display: flex">
+                <input
+                    type="text"
+                    id="manualDomain"
+                    placeholder="Enter domain (e.g., youtube.com)"
+                    style="
+                        height: 40px;
+                        padding: 0 10px;
+                        border-radius: 4px 0 0 4px;
+                        flex-grow: 1;
+                        box-sizing: border-box;
+                        margin: 0;
+                        border: 1px solid #ccc;
+                    "
+                />
+                <button
+                    id="addManualDomain"
+                    style="
+                        height: 40px;
+                        padding: 0 15px;
+                        border-radius: 0 4px 4px 0;
+                        cursor: pointer;
+                        box-sizing: border-box;
+                        margin: 0;
+                        border: 1px solid #ccc;
+                    "
+                >
+                    Add
+                </button>
+            </div>
+        </div>
+
+        <h3>Managed Domains:</h3>
+        <div id="domainList" class="domain-list">
+            <!-- Domain list will be populated here -->
+        </div>
+
+        <div class="settings-section">
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="enableExtension" checked />
+                    Enable Extension
+                </label>
+
+                <p>You can Toogle the extenssion on or off by using Ctrl+Shift+Y [⊞] or Cmd+Shift+Y []</p>
+            </div>
+        </div>
+
+        <script src="popup.js"></script>
+    </body>
+</html>
